@@ -9,26 +9,34 @@ import (
 
 var err error
 
+// ProductRequest :: Request model for product
 type ProductRequest struct {
-	Name  string
-	Price uint
+	// Name of the product
+	Name string `json:"name"`
+	// Price of the product
+	Price uint `json:"price"`
 }
 
+// ProductResponse :: Response model for product
 type ProductResponse struct {
-	ID    string
-	Name  string
-	Price uint
+	// ID of the product
+	ID string `json:"id"`
+	// Name of the product
+	Name string `json:"name"`
+	// Price of the product
+	Price uint `json:"price"`
 }
 
-// HeartbeatResponse :: Struct for Healthcheck
-type HeartbeatResponse struct {
+// HealthCheckResponse :: Response model for health check
+type HealthCheckResponse struct {
+	// "OK" or "FAILED"
 	Status string `json:"status"`
-	Code   int    `json:"code"`
+	// HTTP status code
+	Code int `json:"code"`
 }
 
-// HealthCheck :: Simple healthcheck endpoint that returns HTTP 200
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
-	jsoniter.NewEncoder(w).Encode(HeartbeatResponse{Status: "OK", Code: 200})
+	jsoniter.NewEncoder(w).Encode(HealthCheckResponse{Status: "OK", Code: 200})
 }
 
 func CreateProduct(w http.ResponseWriter, request *http.Request) {
