@@ -1,11 +1,11 @@
 package data
 
 import (
-	"challenge-bravo/config"
 	"fmt"
 
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	// _ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 type Product struct {
@@ -20,6 +20,8 @@ var (
 	err    error
 )
 
+var firstTime bool
+
 func StartDB() {
 
 	fmt.Println("• Connecting to DB..")
@@ -32,10 +34,11 @@ func StartDB() {
 }
 
 func OpenTestConnection() (db *gorm.DB, err error) {
-	var c = config.Config.DB
-	dbHost = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s", c.Host, c.Port, c.User, c.Database, c.Password)
+	// var c = config.Config.DB
+	// dbHost = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s", c.Host, c.Port, c.User, c.Database, c.Password)
 
-	db, err = gorm.Open("postgres", dbHost)
+	// db, err = gorm.Open("postgres", dbHost)
+	db, err = gorm.Open("sqlite3", "/tmp/gorm.db")
 	db.LogMode(true)
 	if err != nil {
 		return nil, err
@@ -65,9 +68,14 @@ func GetProductByID(productID int64) (bool, *Product) {
 }
 
 func CreateProduct(name string, price uint) (bool, *Product, error) {
-	var product = db.Create(&Product{Name: name, Price: price})
+	if !firstTime {
+		StartDB()
+	}
+	var product = Product{Name: name, Price: price}
 	if err := db.Create(&product).Error; err != nil {
+		fmt.Println(err)
 		return false, nil, err
 	}
+	firstTime = true
 	return true, &product, nil
 }

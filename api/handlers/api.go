@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"kube_features/api/data"
 	"net/http"
 
 	jsoniter "github.com/json-iterator/go"
@@ -21,7 +22,7 @@ type ProductRequest struct {
 // ProductResponse :: Response model for product
 type ProductResponse struct {
 	// ID of the product
-	ID string `json:"id"`
+	ID uint `json:"id"`
 	// Name of the product
 	Name string `json:"name"`
 	// Price of the product
@@ -49,5 +50,6 @@ func CreateProduct(w http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	jsoniter.NewEncoder(w).Encode(ProductResponse{ID: "fakeId", Name: product.Name, Price: product.Price})
+	_, createdProduct, _ := data.CreateProduct(product.Name, product.Price)
+	jsoniter.NewEncoder(w).Encode(ProductResponse{ID: createdProduct.Model.ID, Name: createdProduct.Name, Price: createdProduct.Price})
 }
