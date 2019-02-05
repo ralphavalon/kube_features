@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	jsoniter "github.com/json-iterator/go"
@@ -36,10 +37,12 @@ type HealthCheckResponse struct {
 }
 
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("• Checking for health...")
 	jsoniter.NewEncoder(w).Encode(HealthCheckResponse{Status: "OK", Code: 200})
 }
 
 func CreateProduct(w http.ResponseWriter, request *http.Request) {
+	fmt.Println("• Creating product...")
 	decoder := json.NewDecoder(request.Body)
 	var product ProductRequest
 	err := decoder.Decode(&product)

@@ -24,8 +24,8 @@
 package main
 
 import (
+	"fmt"
 	api "kube_features/api/handlers"
-	_ "kube_features/swagger-ui"
 	"os"
 
 	"net/http"
@@ -76,9 +76,10 @@ func main() {
 	router.PathPrefix("/").Handler(sh)
 
 	corsOrigins := handlers.AllowedOrigins([]string{"*"})
-	corsMethods := handlers.AllowedMethods([]string{"GET", "HEAD", "OPTIONS"})
+	corsMethods := handlers.AllowedMethods([]string{"GET", "POST", "HEAD", "OPTIONS"})
 
 	h := handlers.CORS(corsOrigins, corsMethods)(router)
 
+	fmt.Println("Starting server on port 8081...")
 	http.ListenAndServe(":8081", h)
 }
