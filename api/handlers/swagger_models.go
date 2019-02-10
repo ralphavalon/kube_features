@@ -1,6 +1,6 @@
 package api
 
-// HTTP status code and status
+// HTTP status code and status and version
 // swagger:response healthCheckResponse
 type swaggerHealthCheckResponse struct {
 	// in:body

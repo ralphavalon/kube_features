@@ -88,8 +88,23 @@ func main() {
 	//
 	//     Responses:
 	//       200: healthCheckResponse
-	//       503: healthCheckResponse
 	router.Handle("/health", handlers.CombinedLoggingHandler(os.Stdout, http.HandlerFunc(api.HealthCheck))).Methods("GET")
+	// swagger:route GET /health_with_db HealthCheck health_check_with_db
+	//
+	// Get health check including check on database.
+	//
+	// Does a health check including check on database.
+	//
+	//
+	//     Produces:
+	//     - application/json
+	//
+	//     Schemes: http
+	//
+	//     Responses:
+	//       200: healthCheckResponse
+	//       503: healthCheckResponse
+	router.Handle("/health_with_db", handlers.CombinedLoggingHandler(os.Stdout, http.HandlerFunc(api.HealthWithDBCheck))).Methods("GET")
 	// swagger:route GET /check HealthCheck version_check
 	//
 	// Get version check on another kube_features API.

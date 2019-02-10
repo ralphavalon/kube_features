@@ -55,6 +55,19 @@ func HealthCheck(w http.ResponseWriter, r *http.Request) {
 	jsoniter.NewEncoder(w).Encode(HealthCheckResponse{Status: "OK", Code: 200, Version: currentVersion})
 }
 
+func HealthWithDBCheck(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("• Checking for health with db...")
+	var healthCheckResponse HealthCheckResponse
+	_, err := data.OpenTestConnection()
+	if err == nil {
+		healthCheckResponse = HealthCheckResponse{Status: "FAILED", Code: 503, Version: currentVersion}
+		w.WriteHeader(http.StatusServiceUnavailable)
+	} else {
+		healthCheckResponse = HealthCheckResponse{Status: "OK", Code: 200, Version: currentVersion}
+	}
+	jsoniter.NewEncoder(w).Encode(healthCheckResponse)
+}
+
 func VersionCheck(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("• Checking external api...")
 	var versionCheckResponse VersionCheckResponse
