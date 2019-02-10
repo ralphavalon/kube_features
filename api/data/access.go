@@ -2,10 +2,12 @@ package data
 
 import (
 	"fmt"
+	"kube_features/api/config"
 
 	"github.com/jinzhu/gorm"
-	// _ "github.com/jinzhu/gorm/dialects/postgres"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/lib/pq"
+	// _ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 type Product struct {
@@ -34,15 +36,17 @@ func StartDB() {
 }
 
 func OpenTestConnection() (db *gorm.DB, err error) {
-	// var c = config.Config.DB
-	// dbHost = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s", c.Host, c.Port, c.User, c.Database, c.Password)
+	var c = config.Config
+	dbHost = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s", c.DBHost, c.DBPort, c.DBUser, c.DBName, c.DBPassword)
 
-	// db, err = gorm.Open("postgres", dbHost)
-	db, err = gorm.Open("sqlite3", "/tmp/gorm.db")
+	db, err = gorm.Open("postgres", dbHost)
+	// db, err = gorm.Open("sqlite3", "/tmp/gorm.db")
 	db.LogMode(true)
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
+	fmt.Println("Database is accessible.")
 	return db, nil
 }
 

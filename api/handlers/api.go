@@ -59,7 +59,7 @@ func HealthWithDBCheck(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("• Checking for health with db...")
 	var healthCheckResponse HealthCheckResponse
 	_, err := data.OpenTestConnection()
-	if err == nil {
+	if err != nil {
 		healthCheckResponse = HealthCheckResponse{Status: "FAILED", Code: 503, Version: currentVersion}
 		w.WriteHeader(http.StatusServiceUnavailable)
 	} else {
