@@ -35,11 +35,13 @@ type HealthCheckResponse struct {
 	Status string `json:"status"`
 	// HTTP status code
 	Code int `json:"code"`
+	// Version
+	Version string `json:"version"`
 }
 
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("• Checking for health...")
-	jsoniter.NewEncoder(w).Encode(HealthCheckResponse{Status: "OK", Code: 200})
+	jsoniter.NewEncoder(w).Encode(HealthCheckResponse{Status: "OK", Code: 200, Version: "v1"})
 }
 
 func CreateProduct(w http.ResponseWriter, request *http.Request) {
