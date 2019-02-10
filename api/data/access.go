@@ -37,7 +37,7 @@ func StartDB() {
 
 func OpenTestConnection() (db *gorm.DB, err error) {
 	var c = config.Config
-	dbHost = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s", c.DBHost, c.DBPort, c.DBUser, c.DBName, c.DBPassword)
+	dbHost = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", c.DBHost, c.DBPort, c.DBUser, c.DBName, c.DBPassword)
 
 	db, err = gorm.Open("postgres", dbHost)
 	// db, err = gorm.Open("sqlite3", "/tmp/gorm.db")
