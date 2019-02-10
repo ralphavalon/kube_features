@@ -90,6 +90,21 @@ func main() {
 	//       200: healthCheckResponse
 	//       503: healthCheckResponse
 	router.Handle("/health", handlers.CombinedLoggingHandler(os.Stdout, http.HandlerFunc(api.HealthCheck))).Methods("GET")
+	// swagger:route GET /check HealthCheck version_check
+	//
+	// Get version check on another kube_features API.
+	//
+	// Does a version check on another kube_features API.
+	//
+	//
+	//     Produces:
+	//     - application/json
+	//
+	//     Schemes: http
+	//
+	//     Responses:
+	//       200: versionCheckResponse
+	router.Handle("/check", handlers.CombinedLoggingHandler(os.Stdout, http.HandlerFunc(api.VersionCheck))).Methods("GET")
 	// swagger:route POST /product Product productRequest
 	//
 	// Create a new product.

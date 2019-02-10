@@ -5,11 +5,14 @@ import (
 	"fmt"
 	"kube_features/api/data"
 	"net/http"
+	"os"
 
 	jsoniter "github.com/json-iterator/go"
 )
 
 var err error
+
+var currentVersion = "v1"
 
 // ProductRequest :: Request model for product
 type ProductRequest struct {
@@ -39,9 +42,39 @@ type HealthCheckResponse struct {
 	Version string `json:"version"`
 }
 
+// VersionCheckResponse :: Response model for version check
+type VersionCheckResponse struct {
+	// Current Version
+	Current string `json:"current"`
+	// Called Version
+	Called string `json:"called"`
+}
+
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("• Checking for health...")
-	jsoniter.NewEncoder(w).Encode(HealthCheckResponse{Status: "OK", Code: 200, Version: "v1"})
+	jsoniter.NewEncoder(w).Encode(HealthCheckResponse{Status: "OK", Code: 200, Version: currentVersion})
+}
+
+func VersionCheck(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("• Checking external api...")
+	var versionCheckResponse VersionCheckResponse
+	externalAPI := os.Getenv("EXTERNAL_API")
+	response, err := http.Get(externalAPI + "/health")
+	if err != nil {
+		fmt.Printf("%s", err)
+		versionCheckResponse = VersionCheckResponse{Current: currentVersion, Called: fmt.Sprintf("%s", err)}
+	} else {
+		defer response.Body.Close()
+		var healthCheckResponse HealthCheckResponse
+		err := json.NewDecoder(response.Body).Decode(&healthCheckResponse)
+		if err != nil {
+			fmt.Printf("%s", err)
+			versionCheckResponse = VersionCheckResponse{Current: currentVersion, Called: fmt.Sprintf("%s", err)}
+		} else {
+			versionCheckResponse = VersionCheckResponse{Current: currentVersion, Called: healthCheckResponse.Version}
+		}
+	}
+	jsoniter.NewEncoder(w).Encode(versionCheckResponse)
 }
 
 func CreateProduct(w http.ResponseWriter, request *http.Request) {

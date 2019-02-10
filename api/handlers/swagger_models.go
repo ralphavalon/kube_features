@@ -7,6 +7,13 @@ type swaggerHealthCheckResponse struct {
 	Body HealthCheckResponse
 }
 
+// Current version and called version
+// swagger:response versionCheckResponse
+type swaggerVersionCheckResponse struct {
+	// in:body
+	Body VersionCheckResponse
+}
+
 // New product request
 // swagger:parameters productRequest
 type swaggerProductRequest struct {
