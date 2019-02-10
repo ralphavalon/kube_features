@@ -24,7 +24,9 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"io/ioutil"
 	api "kube_features/api/handlers"
 	"os"
 
@@ -33,6 +35,41 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
+
+var absPath string
+
+func init() {
+	absPath, _ = os.Getwd()
+
+	if absPath == "/go" {
+		absPath = absPath + "/bin"
+	}
+
+	fmt.Println(absPath)
+
+	input, err := ioutil.ReadFile(absPath + "/swagger-ui/swagger-base.json")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	output := input
+
+	swaggerAPIHost := os.Getenv("API_HOST")
+
+	if len(swaggerAPIHost) != 0 {
+		fmt.Println("Setting Swagger API Host to: " + swaggerAPIHost)
+
+		oldHost := `"host": "localhost:8081"`
+		newHost := fmt.Sprintf(`"host": "%s"`, swaggerAPIHost)
+
+		output = bytes.Replace(input, []byte(oldHost), []byte(newHost), -1)
+	}
+
+	if err = ioutil.WriteFile(absPath+"/swagger-ui/swagger.json", output, 0666); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
 
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
@@ -72,7 +109,7 @@ func main() {
 	//       200: productResponse
 	router.Handle("/product", handlers.CombinedLoggingHandler(os.Stdout, http.HandlerFunc(api.CreateProduct))).Methods("POST")
 
-	sh := http.StripPrefix("/", http.FileServer(http.Dir("./swagger-ui/")))
+	sh := http.StripPrefix("/", http.FileServer(http.Dir(absPath+"/swagger-ui/")))
 	router.PathPrefix("/").Handler(sh)
 
 	corsOrigins := handlers.AllowedOrigins([]string{"*"})
