@@ -50,19 +50,6 @@ func OpenTestConnection() (db *gorm.DB, err error) {
 	return db, nil
 }
 
-func GetDBConn() (db *gorm.DB) {
-	// Check if database connection is open, otherwise open a new one
-	dbPing := db.DB().Ping()
-	if dbPing != nil {
-		fmt.Println("• DB: Trying to open database again..")
-		if db, err = OpenTestConnection(); err != nil {
-			fmt.Println("• DB: Failed to connect to MySQL Server. %+v", err)
-		}
-		return db
-	}
-	return db
-}
-
 func GetProductByID(productID int64) (bool, *Product) {
 	var product Product
 	if err := db.Where("id = ?", productID).First(&product).Error; err != nil {
