@@ -11,9 +11,9 @@ var Config = struct {
 }{}
 
 func init() {
-	Config.DBHost = os.Getenv("DB_HOST")
-	Config.DBUser = os.Getenv("DB_USER")
-	Config.DBPassword = os.Getenv("DB_PASSWORD")
-	Config.DBPort = os.Getenv("DB_PORT")
-	Config.DBName = os.Getenv("DB_NAME")
+	Config.DBHost = os.Getenv("SECRET_DB_HOST")
+	Config.DBUser = os.Getenv("SECRET_DB_USER")
+	Config.DBPassword = os.Getenv("SECRET_DB_PASSWORD")
+	Config.DBPort = os.Getenv("SECRET_DB_PORT")
+	Config.DBName = os.Getenv("SECRET_DB_NAME")
 }

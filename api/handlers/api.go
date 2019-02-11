@@ -12,7 +12,7 @@ import (
 
 var err error
 
-var currentVersion = "v1"
+var currentVersion = "v2"
 
 // ProductRequest :: Request model for product
 type ProductRequest struct {
