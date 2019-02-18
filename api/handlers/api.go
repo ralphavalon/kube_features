@@ -20,6 +20,8 @@ type ProductRequest struct {
 	Name string `json:"name"`
 	// Price of the product
 	Price uint `json:"price"`
+	// Price of the product
+	Migrate bool `json:"migrate"`
 }
 
 // ProductResponse :: Response model for product
@@ -98,6 +100,6 @@ func CreateProduct(w http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	_, createdProduct, _ := data.CreateProduct(product.Name, product.Price)
+	_, createdProduct, _ := data.CreateProduct(product.Name, product.Price, product.Migrate)
 	jsoniter.NewEncoder(w).Encode(ProductResponse{ID: createdProduct.Model.ID, Name: createdProduct.Name, Price: createdProduct.Price})
 }

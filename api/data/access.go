@@ -22,8 +22,6 @@ var (
 	err    error
 )
 
-var firstTime bool
-
 func StartDB() {
 
 	fmt.Println("• Connecting to DB..")
@@ -58,8 +56,8 @@ func GetProductByID(productID int64) (bool, *Product) {
 	return true, &product
 }
 
-func CreateProduct(name string, price uint) (bool, *Product, error) {
-	if !firstTime {
+func CreateProduct(name string, price uint, migrate bool) (bool, *Product, error) {
+	if migrate {
 		StartDB()
 	}
 	var product = Product{Name: name, Price: price}
@@ -67,6 +65,5 @@ func CreateProduct(name string, price uint) (bool, *Product, error) {
 		fmt.Println(err)
 		return false, nil, err
 	}
-	firstTime = true
 	return true, &product, nil
 }
