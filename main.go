@@ -29,6 +29,7 @@ import (
 	"io/ioutil"
 	api "kube_features/api/handlers"
 	"os"
+	"strings"
 
 	"net/http"
 
@@ -57,6 +58,11 @@ func init() {
 	swaggerAPIHost := os.Getenv("API_HOST")
 
 	if len(swaggerAPIHost) != 0 {
+
+		if strings.HasPrefix(swaggerAPIHost, "http://") {
+			swaggerAPIHost = swaggerAPIHost[7:]
+		}
+
 		fmt.Println("Setting Swagger API Host to: " + swaggerAPIHost)
 
 		oldHost := `"host": "localhost:8081"`
